@@ -1,0 +1,21 @@
+---
+    template_home:                  /home/image/Waxwing/tmpl
+    images_home:                    /home/image/Waxwing/root/images
+    site_name:                      Waxwing
+    app_name:                       Waxwing v1.0
+    home_page:                      http://image.soupmode.com
+    site_description:               Image Uploader
+    domain_name:                    image.soupmode.com
+    css_dir_url:                    http://image.soupmode.com/css 
+    maincss_url:                    http://image.soupmode.com/css/waxwing.css
+    images_home_url:                http://image.soupmode.com/images/
+    cookie_prefix:                  waxwing
+    max_entries_on_page:            10 
+    database_name:                  dbname
+    mailgun_api_key:                mailgun-key
+    mailgun_domain:                 mailgun-info
+    mailgun_from:                   Mailgun Sandbox whatever
+    debug_mode:                     0
+    multiple_sessionids:            1
+    author_name:                    mrx
+    author_profile:                 profile

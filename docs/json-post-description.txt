@@ -1,0 +1,16 @@
+Description of a post
+
+{
+    "_id"                   : "1-asdfuoajs90890jlajsf0ausfdojoasdfu90e",
+    "_rev"                  : "4-ad0c0316a32ac4b217431127130fd516",
+    "author"                : "MrX",
+    "created_at"            : "2015/04/17 13:37:35",
+    "updated_at"            : "2015/04/17 14:09:30",
+    "formatted_updated_at"  : "Jul 2, 2015 20:30:07 Z",
+    "markup"                : "entire markup of the post",
+    "html"                  : "entire post formatted in HTML",
+    "tags"                  : ["nature","home","bird"],
+    "image_url"             : http://asdfasf.com/images/asdfsd.jpg",
+    "orientation"           : "1",
+    "post_status"           : "public"
+}

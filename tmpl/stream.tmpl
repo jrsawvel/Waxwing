@@ -1,0 +1,62 @@
+<!-- tmpl_include name="header.tmpl" -->
+
+<main>
+
+<!-- tmpl_if search -->
+<p>
+<!-- tmpl_var name="search_type_text" --> results for &ldquo;<!-- tmpl_var name="keyword" -->&rdquo;
+ - <a href="/<!-- tmpl_var name="search_type" -->/<!-- tmpl_var name="search_uri_str" -->">#</a>
+ - <a href="/<!-- tmpl_var name="search_type" -->/<!-- tmpl_var name="search_uri_str" -->/rss">rss</a>
+</p>
+<!-- tmpl_else -->
+<!-- tmpl_unless loggedin -->
+<!--
+<center>
+<span class="site-description greytext"><a href="/info"><!-- tmpl_var name="site_description" --></a></span>
+</center>
+-->
+<!-- /tmpl_unless -->
+<!-- /tmpl_if -->
+
+<!-- tmpl_if loggedin -->
+<p>
+<a href="http://image.soupmode.com/add">Add</a>
+</p>
+<!-- /tmpl_if -->
+
+<!-- tmpl_loop name="stream_loop" -->
+<!-- image orientation value = <!-- tmpl_var name="orientation" --> -->
+<article>
+<p>
+<section class="stream-content">
+<!-- <!-- tmpl_var name="updated_at" --> -->
+<span class="greytext">uploaded on <a title="by <!-- tmpl_var name="author" -->" href="/<!-- tmpl_var name="slug" -->"><time datetime="<!-- tmpl_var name="formatted_updated_at" -->"><!-- tmpl_var name="formatted_updated_at" --></time></a> </span>
+<a href="<!-- tmpl_var name="image_url" -->"><img src="<!-- tmpl_var name="image_url" -->"></a>
+<br />
+<div class="imagetext"><!-- tmpl_var name="html" --></div>
+</section>
+</p>
+</article>
+<!-- /tmpl_loop -->
+
+<!-- tmpl_if not_last_page -->
+<span class="olderlink"><a href="<!-- tmpl_var name="next_page_url" -->">Older &gt;&gt;</a></span>
+<!-- /tmpl_if -->
+<!-- tmpl_if not_page_one -->
+<a href="<!-- tmpl_var name="previous_page_url" -->">&lt;&lt; Newer</a>
+<!-- /tmpl_if -->
+
+</main>
+
+<!-- tmpl_if loggedin -->
+<br />
+<p style="text-align:center">
+ <span class="greytext"><a title="logout" href="/logout">LO</a></span>
+ &nbsp; &nbsp; &nbsp; &nbsp;  <span class="greytext"><a title="show deleted posts" href="/deleted">DEL</a></span>
+ &nbsp; &nbsp; &nbsp; &nbsp;  <span class="greytext"><a title="user settings" href="/settings">U</a></span>
+</p>
+<!-- /tmpl_if -->
+
+<!-- tmpl_include name="footer.tmpl" -->
+
+

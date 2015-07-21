@@ -1,0 +1,188 @@
+@import url(normalize.css); 
+
+html {
+    height: 100%;
+    max-height: 100%;
+}
+
+body {
+    height: 100%;
+    max-height: 100%;
+    color: #000000;
+    background: #ffffff;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif; 
+    font-size: 100%;   /* ~16px */ /* this is defined in the text resizer css file */
+    line-height: 1.5em;
+    width: 100%;
+}  
+
+a {
+    color: #0000ff;
+    text-decoration: underline; 
+}
+
+a:visited {
+    color: #cc3399;
+    text-decoration: underline; 
+} 
+
+a:hover {
+    color: #ff0000;
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline; 
+    color: #ff0000;
+}
+
+header {
+    font-size: 90%;
+     /* border: 1px solid black; */
+}
+
+header a {
+    color: #666666;
+    text-decoration: none;
+}
+
+header a:visited {
+    color: #666666;
+    text-decoration: none;
+}
+
+header a:hover {
+    color: #666666;
+    text-decoration: underline;
+}
+
+nav ul {
+    margin: 5px; 
+    padding: 0;
+}
+
+nav ul li {
+    display: inline; 
+    margin: 0; /* margin: 5px; */
+}
+
+main {
+    position: relative;
+    width: 100%;
+    max-width: 650px; /* 700 px orig */
+    margin: 0px auto 0px;
+}
+
+article .stream-content {
+    color: #222; 
+    /* font-size: 1.1em;  */
+    /* border: 1px solid black; */
+    margin-bottom: 50px;
+}
+
+article .article-body {
+    line-height: 1.7em;
+    /* color: #333;font-size: 1.33em; */
+    color: #222;font-size: 1.2em; 
+}
+
+article p {
+/*
+    margin-top: 40px;
+    margin-bottom: 40px;
+*/
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+input {
+    width: 80%;
+    font-size: 1em;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif; 
+}
+
+.sitewide-footer {
+    clear: right;
+    clear: left;
+    /* font-size: .9em; */
+   /* text-align: center; */
+    padding-bottom: 25px;
+}
+
+/* g. small, grey-colored text links */
+.greytext {
+    font-size: 90%;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif; 
+}
+
+.greytext a {
+    color: #888888;
+    text-decoration: none;
+}
+
+.greytext a:visited {
+    color: #888888;
+    text-decoration: none;
+}
+
+.greytext a:hover {
+    color: #000000; 
+    text-decoration: underline;
+}
+
+.submitbutton {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px; 
+    font-size: 1em;
+    color: #666;
+    background: #fff;
+    border: 1px solid #b8b8b8;
+}
+
+.submitbutton:hover {
+    color: #000;
+    border: 1px solid #222;
+}
+
+#saveimagetext {
+    color: #fff;
+    font-weight: bold;
+}
+
+#file-select-button, #image-text, #upload-image {
+    margin: 10px;
+}
+
+#preview-row {
+    display: none;
+}
+
+.imagetext {
+    margin: 0;
+    padding: 0;
+/*
+    width: 95%;
+    margin: 0px auto 0px;
+*/
+}
+
+.olderlink {
+    float: right;
+}
+
+
+/* 37.5em = 600px */
+@media only screen and (max-width: 37.5em) {
+    .imagetext {
+        width: 95%;
+        margin: 0px auto 0px;
+    }
+}
+
+
+
