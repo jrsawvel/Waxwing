@@ -30,6 +30,34 @@ $perl_hash->{'views'}->{'stream'}->{'map'} = $view_js;
 
 
 
+# get a single post HTML display
+$view_js =  <<VIEWJS2;
+function(doc) {
+    if( doc.post_status === 'public' ) {
+        emit(doc._id, {slug: doc._id, html: doc.html, image_url: doc.image_url, orientation: doc.orientation, tags: doc.tags, author: doc.author, formatted_updated_at: doc.formatted_updated_at});
+    }
+}
+VIEWJS2
+$perl_hash->{'views'}->{'post'}->{'map'} = $view_js;
+
+
+
+# tag search on the tag array
+$view_js = <<VIEWJS9;
+function(doc) {
+  if( doc.post_status === 'public' && doc.tags.length > 0) {
+    doc.tags.forEach(function(i) {
+      emit( [i, doc.updated_at ], {slug: doc._id, html: doc.html, image_url: doc.image_url, orientation: doc.orientation, tags: doc.tags, author: doc.author, formatted_updated_at: doc.formatted_updated_at});
+    });
+  }
+}
+_count 
+VIEWJS9
+$perl_hash->{'views'}->{'tag_search'}->{'map'} = $view_js;
+
+
+
+
 my $c = CouchDB::Client->new();
 $c->testConnection or die "The server cannot be reached";
 

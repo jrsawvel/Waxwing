@@ -12,15 +12,19 @@ my $dispatch_for = {
     test           =>   sub { return \&do_sub(       "Image",          "do_test"                  ) },
     addimagejson   =>   sub { return \&do_sub(       "Image",          "add_image_json"           ) },
     stream         =>   sub { return \&do_sub(       "Stream",         "show_stream"              ) },
+    post           =>   sub { return \&do_sub(       "Post",           "show_post"                ) },
+    searchform     =>   sub { return \&do_sub(       "Stream",         "show_search_form"         ) },
+    tag            =>   sub { return \&do_sub(       "Stream",         "tag_search"               ) },
+    search         =>   sub { return \&do_sub(       "Stream",         "search"                   ) },
 };
 
 sub execute {
     my $function = $cgi_params{function};
 
     $dispatch_for->{stream}->() if !defined($function) or !$function;
-#    $dispatch_for->{showerror}->() if !defined($function) or !$function;
 
-    $dispatch_for->{showerror}->($function) unless exists $dispatch_for->{$function} ;
+#    $dispatch_for->{showerror}->($function) unless exists $dispatch_for->{$function} ;
+    $dispatch_for->{post}->($function) unless exists $dispatch_for->{$function} ;
 
     defined $dispatch_for->{$function}->();
 }
