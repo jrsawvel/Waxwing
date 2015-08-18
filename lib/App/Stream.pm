@@ -9,6 +9,8 @@ use LWP::UserAgent;
 use JSON::PP;
 use URI::Escape;
 
+use App::User;
+
 sub show_search_form {
     my $t = Page->new("searchform");
     $t->display_page("Search form");
@@ -283,6 +285,12 @@ sub search {
 }
 
 sub show_deleted_posts {
+
+    my $author_name  = User::get_logged_in_author_name(); 
+    my $session_id   = User::get_logged_in_session_id(); 
+    if ( !User::is_valid_login($author_name, $session_id) ) { 
+        Page->report_error("user", "Unable to peform action.", "You are not logged in.");
+    }
 
     my $rc;
 
