@@ -12,6 +12,8 @@ use JSON::PP;
 use CouchDB::Client;
 use HTML::Entities;
 
+use App::User;
+
 use constant UPLOAD_DIR  => Config::get_value_for("images_home");
 use constant BUFFER_SIZE => 16_384;
 use constant MAX_FILE_SIZE => 4_194_304;
@@ -33,6 +35,12 @@ sub add_image_json {
 
 
     my $input_hash_ref = decode_json $input_json;
+
+    my $logged_in_author_name  = $input_hash_ref->{'author'};
+    my $session_id             = $input_hash_ref->{'session_id'};
+    if ( !User::is_valid_login($logged_in_author_name, $session_id) ) { 
+        Error::report_error("400", "Unable to peform action.", "You are not logged in.");
+    }
 
     my $imagetext = $input_hash_ref->{"imagetext"};
     my $imagename = $input_hash_ref->{"imagename"};
@@ -190,12 +198,26 @@ sub do_test {
 }
 
 sub display_add_image_form {
+
+    my $logged_in_author_name  = User::get_logged_in_author_name(); 
+    my $session_id             = User::get_logged_in_session_id(); 
+    if ( !User::is_valid_login($logged_in_author_name, $session_id) ) { 
+        Page->report_error("user", "Unable to peform action.", "You are not logged in.");
+    }
+
     my $t = Page->new("addimageform");
-    $t->display_page("Upload new image");
+    $t->display_page("Upload new image with JS");
 }
 
-sub old_display_add_image_form {
-    my $t = Page->new("oldaddimageform");
+sub display_upload_image_form {
+
+    my $logged_in_author_name  = User::get_logged_in_author_name(); 
+    my $session_id             = User::get_logged_in_session_id(); 
+    if ( !User::is_valid_login($logged_in_author_name, $session_id) ) { 
+        Page->report_error("user", "Unable to peform action.", "You are not logged in.");
+    }
+
+    my $t = Page->new("uploadimageform");
     $t->display_page("Upload new image");
 }
 
@@ -207,6 +229,12 @@ sub add_image {
 
 #my $str = Dumper %ENV;
 #Page->report_error("user", "debug", $str);
+
+    my $logged_in_author_name  = User::get_logged_in_author_name(); 
+    my $session_id             = User::get_logged_in_session_id(); 
+    if ( !User::is_valid_login($logged_in_author_name, $session_id) ) { 
+        Page->report_error("user", "Unable to peform action.", "You are not logged in.");
+    }
 
     my $max_image_size = 640; # pixels
 

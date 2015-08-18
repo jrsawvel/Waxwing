@@ -5,7 +5,7 @@ use CouchDB::Client;
 use Data::Dumper;
 
 
-my $db = "waxwing";
+my $db = "waxwingdvlp";
 
 
 my $views = <<VIEWS;
@@ -54,6 +54,48 @@ function(doc) {
 _count 
 VIEWJS9
 $perl_hash->{'views'}->{'tag_search'}->{'map'} = $view_js;
+
+
+
+# get author info
+
+$view_js =  <<VIEWJS7;
+function(doc) {
+    if( doc.type === 'author' ) {
+        emit(doc._id, doc);
+    }
+}
+VIEWJS7
+
+$perl_hash->{'views'}->{'author'}->{'map'} = $view_js;
+
+
+
+# get session id info
+
+$view_js =  <<VIEWJS8;
+function(doc) {
+    if( doc.type === 'session_id' ) {
+        emit(doc._rev, doc);
+    }
+}
+VIEWJS8
+
+$perl_hash->{'views'}->{'session_id'}->{'map'} = $view_js;
+
+
+
+# get a stream of deleted posts executed by the logged-in author
+
+$view_js =  <<VIEWJS5;
+function(doc) {
+    if( doc.post_status === 'deleted' ) {
+        emit(doc.updated_at, {slug: doc._id, html: doc.html, image_url: doc.image_url});
+    }
+}
+VIEWJS5
+
+$perl_hash->{'views'}->{'deleted_posts'}->{'map'} = $view_js;
 
 
 

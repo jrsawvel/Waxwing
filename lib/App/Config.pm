@@ -4,7 +4,7 @@ use warnings;
 
 use YAML::Tiny;
 
-my $yml_file = "/home/image/Waxwing/yaml/waxwing.yml";
+my $yml_file = "/home/waxwing/Waxwing/yaml/waxwing.yml";
 
 my $yaml = YAML::Tiny->new;
 

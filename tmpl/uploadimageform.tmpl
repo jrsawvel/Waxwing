@@ -1,0 +1,26 @@
+<!-- tmpl_include name="header.tmpl"  -->
+
+<main>
+
+<p>
+<big><strong>Upload Photo</strong></big>
+</p>
+
+<div>
+
+<form name="myform" id="waxwingform" method="post" action="/addimage"  enctype="multipart/form-data">  
+  Choose Image: <br />
+ <input type="file" name="image"> <br />
+  <br />
+  Description: <br />
+  <textarea name="imagetext" rows="4" cols="20" wrap="virtual"></textarea>
+  <br />
+    <input class="submitbutton" type="submit" name="sb" value="Upload">
+</form>
+
+</div>
+
+</main>
+
+<!-- tmpl_include name="footer.tmpl" -->
+

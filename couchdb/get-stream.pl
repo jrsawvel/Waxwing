@@ -1,6 +1,6 @@
 #!/usr/bin/perl -wT
 
-use lib '/home/image/Waxwing/lib';
+use lib '/home/waxwing/Waxwing/lib';
 
 use CouchDB::Client;
 use Data::Dumper;

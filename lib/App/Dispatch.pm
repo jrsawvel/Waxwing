@@ -8,6 +8,7 @@ my %cgi_params = Utils::get_cgi_params_from_path_info("function", "one", "two", 
 my $dispatch_for = {
     showerror      =>   sub { return \&do_sub(       "Utils",          "do_invalid_function"      ) },
     add            =>   sub { return \&do_sub(       "Image",          "display_add_image_form"   ) },
+    upload         =>   sub { return \&do_sub(       "Image",          "display_upload_image_form") },
     addimage       =>   sub { return \&do_sub(       "Image",          "add_image"                ) },
     test           =>   sub { return \&do_sub(       "Image",          "do_test"                  ) },
     addimagejson   =>   sub { return \&do_sub(       "Image",          "add_image_json"           ) },
@@ -16,6 +17,12 @@ my $dispatch_for = {
     searchform     =>   sub { return \&do_sub(       "Stream",         "show_search_form"         ) },
     tag            =>   sub { return \&do_sub(       "Stream",         "tag_search"               ) },
     search         =>   sub { return \&do_sub(       "Stream",         "search"                   ) },
+    login          =>   sub { return \&do_sub(       "User",           "show_login_form"          ) },
+    dologin        =>   sub { return \&do_sub(       "User",           "mail_login_link"          ) },
+ nopwdlogin        =>   sub { return \&do_sub(       "User",           "no_password_login"        ) },
+    delete         =>   sub { return \&do_sub(       "Post",           "delete"                   ) },
+    deleted        =>   sub { return \&do_sub(       "Stream",         "show_deleted_posts"       ) },
+    undelete       =>   sub { return \&do_sub(       "Post",           "undelete"                 ) },
 };
 
 sub execute {

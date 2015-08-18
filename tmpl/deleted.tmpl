@@ -1,0 +1,16 @@
+<!-- tmpl_include name="header.tmpl" -->
+<main>
+<!-- tmpl_loop name="deleted_loop" -->
+<article>
+<p>
+<section class="stream-content"> 
+<span class="greytext"><a href="/undelete/<!-- tmpl_var name="slug" -->">undelete</a></span>
+<a href="<!-- tmpl_var name="image_url" -->"><img src="<!-- tmpl_var name="image_url" -->"></a>
+<br />
+<div class="imagetext"><!-- tmpl_var name="html" --></div>
+</section>
+</p>
+</article>
+<!-- /tmpl_loop -->
+</main>
+<!-- tmpl_include name="footer.tmpl" -->

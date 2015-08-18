@@ -4,7 +4,7 @@ use CouchDB::Client;
 use Data::Dumper;
 
 
-my $db = "waxwing";
+my $db = "waxwingdvlp";
 
 my $view_js;
 
@@ -20,14 +20,18 @@ my $perl_hash = $rc->{'json'};
 
 # javascript view code to add
 
-my $view_js =  <<VIEWJS1;
+
+# get a stream of deleted posts executed by the logged-in author
+
+$view_js =  <<VIEWJS5;
 function(doc) {
-    if( doc.post_status === 'public' ) {
-        emit(doc.updated_at, {slug: doc._id, html: doc.html, image_url: doc.image_url, orientation: doc.orientation, tags: doc.tags, author: doc.author, formatted_updated_at: doc.formatted_updated_at});
+    if( doc.post_status === 'deleted' ) {
+        emit(doc.updated_at, {slug: doc._id, html: doc.html, image_url: doc.image_url});
     }
 }
-VIEWJS1
-$perl_hash->{'views'}->{'stream'}->{'map'} = $view_js;
+VIEWJS5
+
+$perl_hash->{'views'}->{'deleted_posts'}->{'map'} = $view_js;
 
 ##############################################
 

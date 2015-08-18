@@ -282,4 +282,29 @@ sub search {
     $t->display_page("Search results for $keyword");
 }
 
+sub show_deleted_posts {
+
+    my $rc;
+
+    my $db = Config::get_value_for("database_name");
+
+    my $c = CouchDB::Client->new();
+    $c->testConnection or Page->report_error("system", "Database error.", "The server cannot be reached.");
+
+    $rc = $c->req('GET', $db . '/_design/views/_view/deleted_posts/?descending=true');
+
+    my $deleted = $rc->{'json'}->{'rows'};
+
+    my @posts;
+
+    foreach my $hash_ref ( @$deleted ) {
+        push(@posts, $hash_ref->{'value'});
+    }
+
+    my $t = Page->new("deleted");
+    $t->set_template_loop_data("deleted_loop", \@posts);
+    $t->display_page("Deleted Posts");
+
+}
+
 1;

@@ -7,6 +7,8 @@ use CouchDB::Client;
 use LWP::UserAgent;
 use JSON::PP;
 
+use App::User;
+
 sub show_post {
     my $tmp_hash      = shift; 
 
@@ -41,8 +43,88 @@ sub show_post {
     $t->set_template_variable("slug",                  $slug);
     $t->set_template_variable("author",                $post->{'author'}); 
 #    $t->set_template_variable("author_profile",        Config::get_value_for("author_profile"));
-
+    $t->set_template_variable("loggedin", User::get_logged_in_flag());
     $t->display_page($post_id);
+}
+
+sub delete {
+    my $tmp_hash = shift; # ref to hash
+    my $post_id = $tmp_hash->{one};
+
+    my $author_name  = User::get_logged_in_author_name(); 
+    my $session_id   = User::get_logged_in_session_id(); 
+
+    if ( !User::is_valid_login($author_name, $session_id) ) { 
+        Page->report_error("user", "Unable to peform action.", "You are not logged in.");
+    }
+
+    my $db = Config::get_value_for("database_name");
+
+    my $rc;
+
+    my $c = CouchDB::Client->new();
+    $c->testConnection or Page->report_error("system", "Database error.", "The server cannot be reached.");
+
+    $rc = $c->req('GET', $db . "/$post_id");
+
+    if ( !$rc->{'json'} ) {
+        Page->report_error("user", "Unable to delete post.", "Post ID \"$post_id\" was not found.");
+    }
+
+    my $perl_hash = $rc->{'json'};
+    
+    if ( !$perl_hash ) {
+        Page->report_error("user", "Unable to delete post.", "Post ID \"$post_id\" was not found.");
+    }
+
+    $perl_hash->{'post_status'} = "deleted";
+
+    $rc = $c->req('PUT', $db . "/$post_id", $perl_hash);
+
+    my $url = Config::get_value_for("home_page");
+    my $q = new CGI;
+    print $q->redirect( -url => $url);
+
+}
+
+sub undelete {
+    my $tmp_hash = shift; # ref to hash
+    my $post_id = $tmp_hash->{one};
+
+    my $author_name  = User::get_logged_in_author_name(); 
+    my $session_id   = User::get_logged_in_session_id(); 
+
+    if ( !User::is_valid_login($author_name, $session_id) ) { 
+        Page->report_error("user", "Unable to peform action.", "You are not logged in.");
+    }
+
+    my $db = Config::get_value_for("database_name");
+
+    my $rc;
+
+    my $c = CouchDB::Client->new();
+    $c->testConnection or Page->report_error("system", "Database error.", "The server cannot be reached.");
+
+    $rc = $c->req('GET', $db . "/$post_id");
+
+    if ( !$rc->{'json'} ) {
+        Page->report_error("user", "Unable to delete post.", "Post ID \"$post_id\" was not found.");
+    }
+
+    my $perl_hash = $rc->{'json'};
+    
+    if ( !$perl_hash ) {
+        Page->report_error("user", "Unable to delete post.", "Post ID \"$post_id\" was not found.");
+    }
+
+    $perl_hash->{'post_status'} = "public";
+
+    $rc = $c->req('PUT', $db . "/$post_id", $perl_hash);
+
+    my $url = Config::get_value_for("home_page") . "/deleted";
+    my $q = new CGI;
+    print $q->redirect( -url => $url);
+
 }
 
 1;

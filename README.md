@@ -18,7 +18,7 @@ It's very minimal. The main purpose is to permit easy upload of a photo from a p
 
 It's annoying to do this or it cannot be done using Instagram or Flickr on the phone. Sometimes, I don't need a giant, high-res image to embed into a post.
 
-Test site at [http://image.soupmode.com](http://image.soupmode.com)
+Test site at [http://waxwing.soupmode.com](http://waxwing.soupmode.com)
 
 One huge problem: A bug exists within iOS7, which prevents the JavaScript from processing the image correctly. The bug existed in iOS6 too. But it's fixed with iOS8.
 
