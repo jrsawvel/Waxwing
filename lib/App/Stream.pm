@@ -61,7 +61,7 @@ sub show_stream {
 
     my $t = Page->new("stream");
 
-# todo    $t->set_template_variable("loggedin", User::get_logged_in_flag());
+    $t->set_template_variable("loggedin", User::get_logged_in_flag());
 
     $t->set_template_loop_data("stream_loop",  \@posts);
 
@@ -141,7 +141,7 @@ sub tag_search {
 
     my $t = Page->new("stream");
 
-# todo    $t->set_template_variable("loggedin", User::get_logged_in_flag());
+    $t->set_template_variable("loggedin", User::get_logged_in_flag());
 
     $t->set_template_loop_data("stream_loop",  \@posts);
 
