@@ -270,10 +270,10 @@ sub add_image {
 
     $image_text = Utils::trim_spaces($image_text);
     if ( !defined($image_text) || length($image_text) < 1 ) {
-        $image_text = " ";
-    } elsif ( length($image_text) > 110) {
-        $err_msg .= "Description must be less than 111 characters long.";
-    }
+        $image_text = "";
+    } #elsif ( length($image_text) > 110) {
+      #  $err_msg .= "Description must be less than 111 characters long.";
+#    }
 
     if ( defined($err_msg) ) {
         Page->report_error("user", "Invalid Input",  $err_msg);
@@ -281,7 +281,10 @@ sub add_image {
 
     my $epochsecs = time();
 
-    my $local_image_filename = UPLOAD_DIR . "/" . $epochsecs . "-" . $tmp_image_name;
+    my $large_image_file_name = $epochsecs . "-large-" . $tmp_image_name;
+
+    my $local_image_filename = UPLOAD_DIR . "/" . $large_image_file_name;
+
     if ( $local_image_filename =~  m/^([a-zA-Z0-9\/\.\-_]+)$/ ) {
         $local_image_filename = $1;
     } else {
@@ -303,17 +306,36 @@ sub add_image {
     my $err = $image->Read($local_image_filename); # camera - Exif data : orientation = 1
     Page->report_error("user", "problem", "could not read $local_image_filename") if $err;
 
-    my $h = $image->Get('height');
-    my $w = $image->Get('width');
-    my $format = $image->Get('format');
-    my $mime = $image->Get('mime');
+    $image->AutoOrient();
+
 
     my %exif = map { s/\s+\z//; $_ }
            map { split /=/, $_  }
            split /exif:/, $image->Get('format', '%[EXIF:*]');
     my $o = $exif{'Orientation'};
 
+    if ( $o == 6 ) {
+        unlink($local_image_filename) || Page->report_error("user", "unable to delete file.", $local_image_filename);
+        $image->Rotate(270);
+        if ( $local_image_filename =~  m/^([a-zA-Z0-9\/\.\-_]+)$/ ) {
+            $local_image_filename = $1;
+        } else {
+            Page->report_error("user", "Bad file name.", "Could not write image for filename: $local_image_filename");
+        }
+        $image->Write($local_image_filename);
+        Page->report_error("user", "could not write new file to drive.", $local_image_filename) if $err;
+        $image = new Image::Magick;
+        $err = $image->Read($local_image_filename); 
+        Page->report_error("user", "problem", "could not read $local_image_filename") if $err;
+    }
+
     unlink($local_image_filename) || Page->report_error("user", "unable to delete file.", $local_image_filename);
+
+    my $h = $image->Get('height');
+    my $w = $image->Get('width');
+    my $format = $image->Get('format');
+    my $mime = $image->Get('mime');
+
 
 if ( $h > $max_image_size or $w > $max_image_size ) {
     if ( $h > $w ) {
@@ -326,8 +348,12 @@ if ( $h > $max_image_size or $w > $max_image_size ) {
 }
 
 
-$image->Resize('height' => $h, 'width' => $w); 
+$image->Resize('height' => $h, 'width' => $w, 'blur' => .001); 
 Page->report_error("user", "could not resize image", "") if "$err";
+
+    my $medium_image_file_name = $epochsecs . "-medium-" . $tmp_image_name;
+
+    $local_image_filename = UPLOAD_DIR . "/" . $medium_image_file_name;
 
     if ( $local_image_filename =~  m/^([a-zA-Z0-9\/\.\-_]+)$/ ) {
         $local_image_filename = $1;
@@ -339,8 +365,50 @@ $image->Write($local_image_filename);
 Page->report_error("user", "could not write new file to drive.", $local_image_filename) if $err;
 
 
-Page->report_error("user", "orientation=$o h=$h w=$w format=$format mime=$mime", "image_name = $image_name");
 
+    my $imagetext = $image_text;    
+    my @tags            = Utils::create_tag_array($imagetext);
+    my $created_at      = Utils::create_datetime_stamp();
+    my $updated_at      = $created_at;
+    my $formatted_updated_at = Utils::format_date_time($updated_at);
+
+    my $html = "";
+
+    if ( $imagetext and length($imagetext) > 0 ) {
+        $html = Utils::url_to_link($imagetext);
+        $html = Utils::hashtag_to_link($html);
+    }  else {
+        $imagetext = "";
+    }
+
+    my $image_url = Config::get_value_for("images_home_url") . $medium_image_file_name;
+
+    my $cdb_hash = {
+        'author'               => Config::get_value_for("author_name"),
+        'created_at'           => $created_at,
+        'updated_at'           => $updated_at,
+        'formatted_updated_at' => $formatted_updated_at,
+        'markup'               => $imagetext,
+        'html'                 => $html,
+        'tags'                 => \@tags,
+        'image_url'            => $image_url,
+        'orientation'          => $o,
+        'post_status'          => 'public'
+    };
+
+    my $db = Config::get_value_for("database_name");
+    my $c = CouchDB::Client->new();
+    $c->testConnection or Page->report_error("user", "Database error.", "The server cannot be reached.");
+    my $rc = $c->req('POST', $db, $cdb_hash);
+    if ( $rc->{status} >= 300 ) {
+        Page->report_error("user", "Unable to create post.", $rc->{msg});
+    }
+
+    print $q->redirect('http://waxwing.soupmode.com');
+    exit;
+
+# Page->report_error("user", "image_url=$image_url orientation=$o h=$h w=$w format=$format mime=$mime", "image_name = $image_name");
+ 
 }
 
 1;
